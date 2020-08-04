@@ -28,7 +28,17 @@
   }
 }
 
-@keyframes slideRight {
+@keyframes slideIn {
+  0% {
+    transform: translate(-150%);
+  }
+
+  100% {
+    transform: translate(0%);
+  }
+}
+
+@keyframes slideOut {
   0% {
     transform: translate(0%);
   }
@@ -38,15 +48,17 @@
   }
 }
 
-@mixin cardFlex {
+.card {
   height: 100vh;
   display: flex;
+  position: absolute;
+  width: 100%;
   flex-flow: row wrap;
   justify-content: center;
   align-content: center;
 
   .cardBody {
-    padding-bottom: 40vh;
+    padding-bottom: 8em;
     width: 90%;
     color: white;
 
@@ -56,6 +68,7 @@
       border-bottom: 1px solid rgba(0, 0, 0, 0.5);
       color: white;
       font-size: 1.3em;
+      padding: 8px;
       width: 100%;
     }
 
@@ -72,37 +85,39 @@
     }
 
     h1 {
-      margin-bottom: 50px;
+      margin-bottom: 40px;
     }
 
     button {
       margin-top: 50px;
-      float: right;
       background: none;
       border: 0px;
       color: white;
-      padding: 5px 25px;
+      padding: 5px 0px;
       font-size: 1.5em;
+      text-align: left;
+    }
+
+    p {
+      font-size: 1.3em;
+    }
+
+    .right {
+      float: right;
+      text-align: right;
     }
   }
+}
+
+.loading {
+  padding-bottom: 3em;
 }
 
 .formContainer {
   height: 100vh;
   overflow: hidden;
-}
-
-.card {
-  @include cardFlex;
-  animation-duration: 1s;
-  animation-name: slideLeft;
-  animation-timing-function: ease-in-out;
-
-  animation-fill-mode: both;
-}
-
-.initialCard {
-  @include cardFlex;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .dissapear {
@@ -115,8 +130,26 @@
   animation-fill-mode: both;
 }
 
+.slideIn {
+  animation-duration: 0.5s;
+  animation-name: slideIn;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+
+.slideOut {
+  animation-duration: 0.5s;
+  animation-name: slideOut;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+
 .show {
-  height: 100vh;
+  display: absolute;
+}
+
+.hide {
+  display: none !important;
 }
 
 .green {

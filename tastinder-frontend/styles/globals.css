@@ -23,3 +23,27 @@ a {
 input[type='text'] {
   border-radius: 4px;
 }
+
+.turquoise {
+  background-color: #1abc9c;
+}
+
+.pumpkin {
+  background-color: #d35400;
+}
+
+.wisteria {
+  background-color: #8e44ad;
+}
+
+.pomegranate {
+  background-color: #c0392b;
+}
+
+.river {
+  background-color: #3498db;
+}
+
+.belize {
+  background-color: #2980b9;
+}

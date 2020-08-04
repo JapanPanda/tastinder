@@ -44,6 +44,15 @@ const Host = () => {
     console.log('Card: ' + card);
   };
 
+  const cancelSession = (event) => {
+    backButtonClick(event);
+    // TODO: call api to delete session
+  };
+
+  const startSession = (event) => {
+    // TODO: call api to create session
+  };
+
   return (
     <div>
       <Head>
@@ -57,7 +66,7 @@ const Host = () => {
         <div
           style={{ zIndex: 4 }}
           className={
-            `${styles.card} ${styles.red} ` +
+            `${styles.card} pumpkin ` +
             (inCard === 0 ? `${styles.slideIn} ` : ``) +
             (outCard[0] === true ? `${styles.slideOut} ` : ``)
           }
@@ -80,7 +89,7 @@ const Host = () => {
         <div
           style={{ zIndex: 3 }}
           className={
-            `${styles.card} ${styles.green} ` +
+            `${styles.card} turquoise ` +
             (inCard === 1 ? `${styles.slideIn} ` : ``) +
             (outCard[1] === true ? `${styles.slideOut} ` : ``)
           }
@@ -104,7 +113,7 @@ const Host = () => {
         <div
           style={{ zIndex: 2 }}
           className={
-            `${styles.card} ${styles.red} ` +
+            `${styles.card} pomegranate ` +
             (inCard === 2 ? `${styles.slideIn} ` : ``) +
             (outCard[2] === true ? `${styles.slideOut} ` : ``)
           }
@@ -129,27 +138,36 @@ const Host = () => {
         <div
           style={{ zIndex: 1 }}
           className={
-            `${styles.card} ${styles.red} ` +
+            `${styles.roomCard} belize ` +
             (inCard === 3 ? `${styles.slideIn} ` : ``) +
             (outCard[3] === true ? `${styles.slideOut} ` : ``)
           }
         >
-          {true && <div className={styles.loading}>Loading</div>}
-
-          {/* <div className={styles.cardBody}>
-            <h1>Create Room?</h1>
-            <div className={styles.cardField}>
-              <p>Ready to find your true love?</p>
+          {false && (
+            <div className={styles.loading}>
+              <div className={styles.ldsHeart}>
+                <div></div>
+              </div>
             </div>
+          )}
 
-            <button onClick={backButtonClick}>←Back</button>
-            <button
-              className={`${styles.right} ${styles.createButton}`}
-              onClick={nextButtonClick}
-            >
-              Create→
-            </button> */}
-          {/* </div> */}
+          <div className={styles.roomInfo}>
+            <span className={styles.title}>
+              <h1>Room Code</h1>
+            </span>
+            <div className={styles.code}>
+              <h3>33214</h3>
+            </div>
+            <span className={styles.players}>
+              <p>Food Critics: 1/4</p>
+            </span>
+            <div>
+              <button onClick={startSession}>Start</button>
+            </div>
+            <div>
+              <button onClick={cancelSession}>Cancel</button>{' '}
+            </div>
+          </div>
         </div>
       </div>
     </div>

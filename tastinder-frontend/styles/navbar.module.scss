@@ -1,6 +1,6 @@
 .navbarContainer {
   height: 4em;
-  background-color: indianred;
+  background-color: #8e44ad;
   display: flex;
   flex-flow: row wrap;
   align-content: center;
@@ -9,7 +9,7 @@
   bottom: 0;
   width: 100%;
   z-index: 100;
-
+  color: #ecf0f1;
   ul {
     justify-content: space-between;
     list-style-type: none;

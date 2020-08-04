@@ -28,6 +28,16 @@
   }
 }
 
+@keyframes slideRight {
+  0% {
+    transform: translate(0%);
+  }
+
+  100% {
+    transform: translate(-150%);
+  }
+}
+
 @mixin cardFlex {
   height: 100vh;
   display: flex;
@@ -35,21 +45,44 @@
   justify-content: center;
   align-content: center;
 
-  .cardText {
-    width: 100%;
+  .cardBody {
     padding-bottom: 40vh;
-    padding-left: 50px;
+    width: 90%;
     color: white;
 
     input[type='text'] {
       background: transparent;
       border: 0px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 1.3em;
+      width: 100%;
     }
 
     input[type='text']:focus {
-      background: rgba(0, 0, 0, 0.2);
+      animation-name: backgroundFill;
+      animation-duration: 0.15s;
+      animation-timing-function: ease-out;
+      animation-fill-mode: both;
       outline: none;
+    }
+
+    input[type='text']::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    h1 {
+      margin-bottom: 50px;
+    }
+
+    button {
+      margin-top: 50px;
+      float: right;
+      background: none;
+      border: 0px;
+      color: white;
+      padding: 5px 25px;
+      font-size: 1.5em;
     }
   }
 }
@@ -64,15 +97,32 @@
   animation-duration: 1s;
   animation-name: slideLeft;
   animation-timing-function: ease-in-out;
+
+  animation-fill-mode: both;
 }
 
 .initialCard {
   @include cardFlex;
-  animation-duration: 1s;
-  animation-name: slideLeft;
-  animation-timing-function: ease-in-out;
 }
 
-.purple {
-  background-color: purple;
+.dissapear {
+  position: absolute;
+  width: 100%;
+  animation-delay: 0.4s;
+  animation-duration: 1s;
+  animation-name: slideRight;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+.show {
+  height: 100vh;
+}
+
+.green {
+  background-color: #538548;
+}
+
+.red {
+  background-color: #80454f;
 }

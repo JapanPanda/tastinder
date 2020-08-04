@@ -11,6 +11,16 @@ const Host = () => {
     console.log('submitted');
   };
 
+  const nextButtonClick = (event) => {
+    setCard(card + 1);
+    console.log('Card: ' + card);
+  };
+
+  const backButtonClick = (event) => {
+    setCard(card - 1);
+    console.log('Card: ' + card);
+  };
+
   return (
     <div>
       <Head>
@@ -20,19 +30,31 @@ const Host = () => {
 
       <NavBar />
       <div className={styles.formContainer}>
-        {card === 0 && (
-          <div className={`${styles.initialCard} ${styles.purple}`}>
-            <div className={styles.cardText}>
-              Location
-              <div className={styles.cardField}>
-                <input type="text" />
-              </div>
+        <div
+          className={
+            `${styles.initialCard} ${styles.red}` +
+            (card !== 0 ? ` ${styles.dissapear}` : ` ${styles.show}`)
+          }
+        >
+          <div className={styles.cardBody}>
+            <h1>Location</h1>
+            <div className={styles.cardField}>
+              <input type="text" placeholder="City, Address, etc..." />
             </div>
+            <button onClick={nextButtonClick}>Next→</button>
           </div>
-        )}
+        </div>
 
         {card === 1 && (
-          <div className={`${styles.initialCard} ${styles.purple}`}>Hi</div>
+          <div className={`${styles.card} ${styles.green}`}>
+            <div className={styles.cardBody}>
+              <h1>Keyword</h1>
+              <div className={styles.cardField}>
+                <input type="text" placeholder="Sushi, burgers, etc..." />
+              </div>
+              <button onClick={nextButtonClick}>Next→</button>
+            </div>
+          </div>
         )}
       </div>
     </div>

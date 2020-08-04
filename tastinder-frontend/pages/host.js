@@ -119,7 +119,7 @@ const Host = () => {
           }
         >
           <div className={styles.cardBody}>
-            <h1>Create Room?</h1>
+            <h1>Create Room</h1>
             <div className={styles.cardField}>
               <p>Ready to find your true love?</p>
             </div>

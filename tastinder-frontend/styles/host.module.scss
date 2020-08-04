@@ -105,7 +105,7 @@
     input[type='text'] {
       background: transparent;
       border: 0px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+      border-bottom: 2px solid rgba(#ecf0f1, 0.5);
       color: #ecf0f1;
       font-size: 1.3em;
       padding: 8px;
@@ -203,6 +203,10 @@
     background-color: rgba(0, 0, 0, 0.3);
     width: 100%;
     padding: 15px;
+  }
+
+  h3 {
+    font-size: 2em;
   }
 
   p {

@@ -8,8 +8,7 @@ const Home = () => {
         <title>Tastinder - Home</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <NavBar />
+      <NavBar pageName="Home" />
     </div>
   );
 };

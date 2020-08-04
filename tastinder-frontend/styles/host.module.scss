@@ -1,0 +1,78 @@
+@keyframes slideLeft {
+  0% {
+    transform: translateX(150%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes backgroundFill {
+  0% {
+    background: rgba(0, 0, 0, 0);
+  }
+
+  100% {
+    background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+@mixin cardFlex {
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-content: center;
+
+  .cardText {
+    width: 100%;
+    padding-bottom: 40vh;
+    padding-left: 50px;
+    color: white;
+
+    input[type='text'] {
+      background: transparent;
+      border: 0px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    }
+
+    input[type='text']:focus {
+      background: rgba(0, 0, 0, 0.2);
+      outline: none;
+    }
+  }
+}
+
+.formContainer {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.card {
+  @include cardFlex;
+  animation-duration: 1s;
+  animation-name: slideLeft;
+  animation-timing-function: ease-in-out;
+}
+
+.initialCard {
+  @include cardFlex;
+  animation-duration: 1s;
+  animation-name: slideLeft;
+  animation-timing-function: ease-in-out;
+}
+
+.purple {
+  background-color: purple;
+}

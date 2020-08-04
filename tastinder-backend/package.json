@@ -1,0 +1,35 @@
+{
+  "name": "tastinder-backend",
+  "version": "1.0.0",
+  "description": "A way for groups to decide what to eat",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JapanPanda/kurojisho.git"
+  },
+  "keywords": [
+    "tastinder",
+    "food"
+  ],
+  "author": "JapanPanda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JapanPanda/tastinder/issues"
+  },
+  "homepage": "https://github.com/JapanPanda/tastinder#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "pg": "^8.3.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.4",
+    "typedi": "^0.8.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {}
+}

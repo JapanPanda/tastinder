@@ -9,27 +9,27 @@ import { useRouter } from 'next/router';
 const Host = () => {
   const router = useRouter();
 
+  // card = current card
   const [card, setCard] = useState(0);
+  // in card = card that is going to transition in (enter back in)
   const [inCard, setInCard] = useState(-1);
+  // out card = array of cards that have transitioned out (exit)
   const [outCard, setOutCard] = useState([false, false, false]);
 
   const [location, setLocation] = useState('');
   const [keyword, setKeyword] = useState('');
-
   const [loading, setLoading] = useState(false);
 
   const handleInput = (event, set) => {
     set(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('submitted');
-  };
-
+  // Move to next card
   const nextButtonClick = (event) => {
     let currCard = card;
     setCard(currCard + 1);
+
+    // Set outcard to true to transition current card out
     let currOutCard = outCard;
     currOutCard[currCard] = true;
     setOutCard(currOutCard);
@@ -37,24 +37,35 @@ const Host = () => {
     console.log('Card: ' + currCard);
   };
 
+  // Move to previous card
   const backButtonClick = (event) => {
     let currCard = card;
     setCard(currCard - 1);
+
+    // Set in card to transition previous card back in
     setInCard(currCard - 1);
 
+    // Set out card to the previous card to false
     let currOutCard = outCard;
     currOutCard[currCard - 1] = false;
     console.log('Card: ' + card);
   };
 
+  // Call API to delete session
   const cancelSession = (event) => {
     backButtonClick(event);
     // TODO: call api to delete session
   };
 
+  // Call API to start session
   const startSession = (event) => {
-    // TODO: call api to create session
-    router.push('/session/[sessionId]', '/session/33124');
+    // TODO: call api to start session
+    router.push('/room/[sessionId]', '/room/33124');
+  };
+
+  // Call API to create session
+  const createSession = (event) => {
+    // TODO: call api to create a session
   };
 
   return (
@@ -147,9 +158,10 @@ const Host = () => {
             (outCard[3] === true ? `${styles.slideOut} ` : ``)
           }
         >
+          {/* Loading */}
           {false && (
-            <div className={styles.loading}>
-              <div className={styles.ldsHeart}>
+            <div className="loading">
+              <div className="ldsHeart">
                 <div></div>
               </div>
             </div>

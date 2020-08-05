@@ -1,0 +1,30 @@
+.cardContainer {
+  color: #ecf0f1;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  grid-template-rows: auto auto auto;
+  position: fixed;
+  align-content: start;
+  font-family: 'Open Sans', serif;
+  text-align: center;
+}
+
+.quitButton {
+  justify-self: start;
+
+  button {
+    padding: 10px;
+    color: #ecf0f1;
+    font-family: 'Open Sans', serif;
+    background: none;
+    border: 0px;
+    font-size: 1em;
+  }
+}
+
+.sessionId {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+}

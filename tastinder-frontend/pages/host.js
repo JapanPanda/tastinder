@@ -1,9 +1,7 @@
 import Head from 'next/head';
 import NavBar from '../components/navbar';
 import styles from '../styles/host.module.scss';
-import React, { useState } from 'react';
-
-// TODO: Implement Autocomplete in location
+import React, { useState, useEffect } from 'react';
 
 const Host = () => {
   const [card, setCard] = useState(0);
@@ -17,6 +15,8 @@ const Host = () => {
 
   const handleInput = (event, set) => {
     set(event.target.value);
+    var input = document.getElementById('searchItem');
+    var autocomplete = new google.maps.places.Autocomplete(input);
   };
 
   const handleSubmit = (event) => {
@@ -53,6 +53,12 @@ const Host = () => {
     // TODO: call api to create session
   };
 
+  const [loaded, error] = useScript(
+    'https://maps.googleapis.com/maps/api/js?key=' +
+      process.env.NEXT_PUBLIC_GOOGLE_API_KEY +
+      '&libraries=places'
+  );
+
   return (
     <div>
       <Head>
@@ -76,6 +82,7 @@ const Host = () => {
             <div className={styles.cardField}>
               <input
                 type="text"
+                id="searchItem"
                 placeholder="City, Address, etc..."
                 onInput={(event) => handleInput(event, setLocation)}
               />
@@ -175,3 +182,69 @@ const Host = () => {
 };
 
 export default Host;
+
+// https://usehooks.com/useScript/
+// Hook
+let cachedScripts = [];
+function useScript(src) {
+  // Keeping track of script loaded and error state
+  const [state, setState] = useState({
+    loaded: false,
+    error: false,
+  });
+
+  useEffect(
+    () => {
+      // If cachedScripts array already includes src that means another instance ...
+      // ... of this hook already loaded this script, so no need to load again.
+      if (cachedScripts.includes(src)) {
+        setState({
+          loaded: true,
+          error: false,
+        });
+      } else {
+        cachedScripts.push(src);
+
+        // Create script
+        let script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+
+        // Script event listener callbacks for load and error
+        const onScriptLoad = () => {
+          setState({
+            loaded: true,
+            error: false,
+          });
+        };
+
+        const onScriptError = () => {
+          // Remove from cachedScripts we can try loading again
+          const index = cachedScripts.indexOf(src);
+          if (index >= 0) cachedScripts.splice(index, 1);
+          script.remove();
+
+          setState({
+            loaded: true,
+            error: true,
+          });
+        };
+
+        script.addEventListener('load', onScriptLoad);
+        script.addEventListener('error', onScriptError);
+
+        // Add script to document body
+        document.body.appendChild(script);
+
+        // Remove event listeners on cleanup
+        return () => {
+          script.removeEventListener('load', onScriptLoad);
+          script.removeEventListener('error', onScriptError);
+        };
+      }
+    },
+    [src] // Only re-run effect if script src changes
+  );
+
+  return [state.loaded, state.error];
+}

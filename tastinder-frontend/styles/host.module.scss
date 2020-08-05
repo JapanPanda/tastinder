@@ -121,7 +121,7 @@
     }
 
     input[type='text']::placeholder {
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(#ecf0f1, 0.8);
     }
 
     h1 {
@@ -145,7 +145,10 @@
   display: flex;
   flex-flow: column nowrap;
 
+  font-family: 'Open Sans', serif;
+
   button {
+    font-family: 'Roboto', serif;
     margin-top: 50px;
     background: none;
     border: 0px;

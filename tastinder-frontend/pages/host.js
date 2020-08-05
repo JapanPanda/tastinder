@@ -2,10 +2,13 @@ import Head from 'next/head';
 import NavBar from '../components/navbar';
 import styles from '../styles/host.module.scss';
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 // TODO: Implement Autocomplete in location
 
 const Host = () => {
+  const router = useRouter();
+
   const [card, setCard] = useState(0);
   const [inCard, setInCard] = useState(-1);
   const [outCard, setOutCard] = useState([false, false, false]);
@@ -51,6 +54,7 @@ const Host = () => {
 
   const startSession = (event) => {
     // TODO: call api to create session
+    router.push('/session/[sessionId]', '/session/33124');
   };
 
   return (

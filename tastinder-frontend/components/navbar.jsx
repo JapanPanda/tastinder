@@ -21,7 +21,7 @@ const NavBar = (props) => {
           </Link>
         </li>
         <li className={styles.endItem}>
-          <Link href="/">
+          <Link href="/join">
             <a className={props.pageName === 'Join' ? styles.boldItem : null}>
               Join
             </a>

@@ -47,3 +47,80 @@ input[type='text'] {
 .belize {
   background-color: #2980b9;
 }
+
+.pac-container {
+  background: none;
+  border-color: rgba(0, 0, 0, 0.2);
+  animation: 1s ease fadeIn;
+}
+.pac-item {
+  font-size: 15px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 0;
+  font-family: 'Roboto', sans-serif;
+}
+.pac-item-query {
+  font-size: 15px;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+.pac-item:hover {
+  background-color: rgba(50, 80, 240, 0.3);
+}
+
+.pac-logo::after {
+  display: none;
+}
+
+.pac-icon {
+  fill: red;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #001f3f;
+  }
+  50% {
+    background-color: #ff4136;
+  }
+  100% {
+    background-color: #001f3f;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+    transform: translateZ(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+    transform: translateZ(0px);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(startYposition);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(endYposition);
+  }
+}

@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize');
 const roomData = require('../models/roomData');
 const fs = require('fs');
 
@@ -27,15 +28,30 @@ module.exports = class roomService {
     });
 
     this.logger.info(`
-    ========================
+    =======================================
     Creating a Room with the Parameters:
     Name: ${roomName}
     Location: ${location}
     Keyword: ${keyword}
-    ========================
+    =======================================
     `);
 
     return roomName;
+  }
+
+  // join the room
+  async joinSession(roomName) {
+    this.logger.info(`
+    =======================================
+    User joining a Room:
+    Name: ${roomName}
+    =======================================
+    `);
+
+    await this.roomModel.update(
+      { players: Sequelize.literal('players + 1') },
+      { where: { roomName: roomName } }
+    );
   }
 
   // get a valid name (one that is not in the database already)

@@ -33,7 +33,7 @@ const Host = () => {
       setNextButtonDisabled(false);
       document.getElementById('nextButton').className = styles.nextEnabled;
     } else {
-      setNextButtonDisabled(false);
+      setNextButtonDisabled(true);
       document.getElementById('nextButton').className = styles.nextDisabled;
     }
   };

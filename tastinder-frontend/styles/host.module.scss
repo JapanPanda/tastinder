@@ -76,6 +76,20 @@
       float: right;
       text-align: right;
     }
+
+    .nextDisabled {
+      float: right;
+      text-align: right;
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .nextEnabled {
+      float: right;
+      text-align: right;
+      opacity: 1;
+      cursor: auto;
+    }
   }
 }
 

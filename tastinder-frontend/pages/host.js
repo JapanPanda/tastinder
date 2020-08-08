@@ -18,6 +18,7 @@ const Host = () => {
   const [keyword, setKeyword] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadedAutocomplete, setLoadedAutocomplete] = useState(false);
+  const [nextButtonDisabled, setNextButtonDisabled] = useState(true);
 
   const handleInput = (event, set) => {
     set(event.target.value);
@@ -25,6 +26,15 @@ const Host = () => {
       var input = document.getElementById('searchItem');
       var autocomplete = new google.maps.places.Autocomplete(input);
       setLoadedAutocomplete(true);
+    }
+
+    // if location has more than one character, enable next button and change to enabled style, else disable and change to disabled style
+    if (event.target.value.length > 0) {
+      setNextButtonDisabled(false);
+      document.getElementById('nextButton').className = styles.nextEnabled;
+    } else {
+      setNextButtonDisabled(false);
+      document.getElementById('nextButton').className = styles.nextDisabled;
     }
   };
 
@@ -106,7 +116,13 @@ const Host = () => {
                 onInput={(event) => handleInput(event, setLocation)}
               />
             </div>
-            <button className={styles.right} onClick={nextButtonClick}>
+            <button
+              // next button starts disabled, but is enabled and changes class as well on location input
+              id="nextButton"
+              disabled={nextButtonDisabled}
+              className={styles.nextDisabled}
+              onClick={nextButtonClick}
+            >
               Next→
             </button>
           </div>

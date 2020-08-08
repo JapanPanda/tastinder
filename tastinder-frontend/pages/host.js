@@ -38,6 +38,13 @@ const Host = () => {
     }
   };
 
+  const handleBlur = (event, set) => {
+    // wait 50ms because google autocomplete takes time to load in value
+    setTimeout(() => {
+      set(document.getElementById('searchItem').value);
+    }, 50);
+  };
+
   const [loaded, error] = useScript(
     'https://maps.googleapis.com/maps/api/js?key=' +
       process.env.NEXT_PUBLIC_GOOGLE_API_KEY +
@@ -114,6 +121,7 @@ const Host = () => {
                 id="searchItem"
                 placeholder="City, Address, etc..."
                 onInput={(event) => handleInput(event, setLocation)}
+                onBlur={(event) => handleBlur(event, setLocation)}
               />
             </div>
             <button
@@ -164,6 +172,8 @@ const Host = () => {
             <h1>Create Room</h1>
             <div className={styles.cardField}>
               <p>Ready to find your true love?</p>
+              <p>Location: {location}</p>
+              <p>Keyword: {keyword}</p>
             </div>
 
             <button onClick={backButtonClick}>←Back</button>

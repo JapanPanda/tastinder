@@ -4,8 +4,6 @@ import styles from '../styles/host.module.scss';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-// TODO: Implement Autocomplete in location
-
 const Host = () => {
   const router = useRouter();
 
@@ -19,12 +17,22 @@ const Host = () => {
   const [location, setLocation] = useState('');
   const [keyword, setKeyword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadedAutocomplete, setLoadedAutocomplete] = useState(false);
 
   const handleInput = (event, set) => {
     set(event.target.value);
-    var input = document.getElementById('searchItem');
-    var autocomplete = new google.maps.places.Autocomplete(input);
+    if (!loadedAutocomplete) {
+      var input = document.getElementById('searchItem');
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      setLoadedAutocomplete(true);
+    }
   };
+
+  const [loaded, error] = useScript(
+    'https://maps.googleapis.com/maps/api/js?key=' +
+      process.env.NEXT_PUBLIC_GOOGLE_API_KEY +
+      '&libraries=places'
+  );
 
   // Move to next card
   const nextButtonClick = (event) => {
@@ -69,12 +77,6 @@ const Host = () => {
   const createSession = (event) => {
     // TODO: call api to create a session
   };
-
-  const [loaded, error] = useScript(
-    'https://maps.googleapis.com/maps/api/js?key=' +
-      process.env.NEXT_PUBLIC_GOOGLE_API_KEY +
-      '&libraries=places'
-  );
 
   return (
     <div>

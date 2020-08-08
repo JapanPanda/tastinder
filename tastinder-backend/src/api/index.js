@@ -1,8 +1,8 @@
 const express = require('express');
-const session = require('./routes/session');
+const room = require('./routes/room');
 const router = express.Router();
 
 module.exports = () => {
-  router.use('/session', session());
+  router.use('/room', room());
   return router;
 };

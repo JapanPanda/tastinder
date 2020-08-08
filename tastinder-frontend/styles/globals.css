@@ -5,6 +5,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Open Sans', sans-serif;
+  height: 100%;
 }
 
 p {
@@ -110,4 +111,47 @@ input[type='text'] {
 
 .belize {
   background-color: #2980b9;
+}
+
+.pac-container {
+  background: none;
+  border-color: rgba(0, 0, 0, 0.2);
+  animation: 1s ease-in-out scrollDown;
+}
+
+.pac-item {
+  font-size: 15px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.pac-item-query {
+  font-size: 15px;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
+.pac-item:hover {
+  background-color: rgba(50, 80, 240, 0.3);
+}
+
+.pac-logo::after {
+  display: none;
+}
+
+@keyframes scrollDown {
+  0% {
+    opacity: 0.2;
+    max-height: 0%;
+  }
+  50% {
+    opacity: 1;
+    max-height: 50%;
+  }
+  100% {
+    opacity: 1;
+    max-height: 100%;
+  }
 }

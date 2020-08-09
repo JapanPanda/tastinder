@@ -1,13 +1,17 @@
 const config = require('../config');
 const bodyParser = require('body-parser');
 const routes = require('../api');
+const cors = require('cors');
 
-module.exports = (app) => {
+module.exports = (app, server) => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
 
+  // cors
+  app.use(cors());
+
   // connect our routes with router
-  app.use(config.api_prefix, routes(app));
+  app.use(config.api_prefix, routes(server));
 
   // error handling
   if (process.env.NODE_ENV === 'production') {

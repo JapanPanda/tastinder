@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 const roomData = require('../models/roomData');
 const fs = require('fs');
 
@@ -41,17 +42,56 @@ module.exports = class roomService {
 
   // join the room
   async joinSession(roomName) {
-    this.logger.info(`
-    =======================================
-    User joining a Room:
-    Name: ${roomName}
-    =======================================
-    `);
+    try {
+      let room = await this.roomModel.findOne({
+        where: { roomName: { [Op.iLike]: roomName } },
+      });
+      if (!room) {
+        this.logger.error('Room not found');
+        return null;
+      }
+      // possible issue is that update takes too long and we get the wrong number of people
+      // if multiple people update
+      await room.update({ players: room.players + 1 });
+      this.logger.info(`
+      =======================================
+      User joining a Room:
+      Name: ${roomName}
+      Players: ${room.players}
+      =======================================
+      `);
+      return room.players;
+    } catch (e) {
+      this.logger.error(e.stack);
+      return null;
+    }
+  }
 
-    await this.roomModel.update(
-      { players: Sequelize.literal('players + 1') },
-      { where: { roomName: roomName } }
-    );
+  // leave the room
+  async leaveSession(roomName) {
+    try {
+      let room = await this.roomModel.findOne({
+        where: { roomName: { [Op.iLike]: roomName } },
+      });
+      if (!room) {
+        this.logger.error('Room not found');
+        return null;
+      }
+      // possible issue is that update takes too long and we get the wrong number of people
+      // if multiple people update
+      await room.update({ players: room.players - 1 });
+      this.logger.info(`
+      =======================================
+      User joining a Room:
+      Name: ${roomName}
+      Players: ${room.players}
+      =======================================
+      `);
+      return room.players;
+    } catch (e) {
+      this.logger.error(e.stack);
+      return null;
+    }
   }
 
   // get a valid name (one that is not in the database already)
@@ -68,7 +108,7 @@ module.exports = class roomService {
 
       roomName = adjective + animal;
       let room = await this.roomModel.findOne({
-        where: { roomName: roomName },
+        where: { roomName: { [Op.iLike]: roomName } },
       });
       if (!room) {
         exists = false;

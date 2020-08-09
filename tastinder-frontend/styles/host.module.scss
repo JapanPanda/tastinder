@@ -28,6 +28,24 @@
   }
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
 .card {
   height: 100vh;
   display: flex;
@@ -75,6 +93,31 @@
     .right {
       float: right;
       text-align: right;
+    }
+
+    .nextDisabled {
+      float: right;
+      text-align: right;
+      opacity: 0.4;
+      cursor: not-allowed;
+
+      animation-duration: 0.5s;
+      animation-name: fadeOut;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: both;
+    }
+
+    .nextEnabled {
+      float: right;
+      text-align: right;
+      opacity: 1;
+      animation: 1s ease fadeIn;
+      cursor: auto;
+
+      animation-duration: 0.5s;
+      animation-name: fadeIn;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: both;
     }
   }
 }

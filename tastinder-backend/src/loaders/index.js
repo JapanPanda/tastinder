@@ -27,7 +27,7 @@ module.exports = async (expressApp, server) => {
     expressLoader(expressApp, server);
     logger.info('Loaded Express!');
   } catch (e) {
-    logger.error(e);
+    logger.error(e.stack);
     process.exit(1);
   }
 };

@@ -4,11 +4,11 @@ module.exports = (sequelize, roomModel) => {
   const RoomData = sequelize.define(
     'RoomData',
     {
-      YelpData: {
+      yelpData: {
         type: Sequelize.JSON,
         notNull: true,
       },
-      Likes: {
+      likes: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
@@ -18,9 +18,13 @@ module.exports = (sequelize, roomModel) => {
 
   roomModel.hasMany(RoomData, {
     foreignKey: 'roomName',
+    as: 'roomData',
   });
 
-  RoomData.belongsTo(roomModel);
+  RoomData.belongsTo(roomModel, {
+    foreignKey: 'roomName',
+    as: 'room',
+  });
 
   return RoomData;
 };

@@ -17,6 +17,20 @@ module.exports = (server) => {
   wss.on('connection', async (ws, req) => {
     let roomName = req.url.slice(11).toLowerCase();
 
+    // handle join on database
+    try {
+      let players = await roomService.joinSession(roomName);
+
+      if (players === null) {
+        logger.error('Room not found, player update unsuccessful');
+        ws.send('Error connecting to the room');
+        return;
+      }
+    } catch (e) {
+      logger.error(e.stack);
+      ws.send('Error connecting to the room');
+    }
+
     // push client to respective room
     if (rooms.has(roomName)) {
       let currArray = rooms.get(roomName);
@@ -27,10 +41,29 @@ module.exports = (server) => {
       newArray.push(ws);
       rooms.set(roomName, newArray);
     }
-
     users.set(ws, roomName);
 
-    // TODO: move join to on open instead
+    let clients = rooms.get(roomName);
+
+    Array.from(clients).forEach(async (client) => {
+      try {
+        let response = {
+          action: 'userJoined',
+          players: players,
+          roomName: roomName,
+        };
+
+        client.send(JSON.stringify(response));
+      } catch (e) {
+        logger.error(e.stack);
+        let response = {
+          action: 'error',
+        };
+
+        client.send(JSON.stringify(response));
+      }
+    });
+
     ws.on('message', async (message) => {
       let userRoom = users.get(ws);
       let clients = rooms.get(userRoom);
@@ -47,36 +80,6 @@ module.exports = (server) => {
         };
 
         return ws.send(JSON.stringify(response));
-      }
-
-      // action is join
-      if (payload.action === 'join') {
-        // handle join on database
-        let players = await roomService.joinSession(userRoom);
-
-        if (players === null) {
-          logger.error('Room not found, player update unsuccessful');
-          return;
-        }
-
-        Array.from(clients).forEach(async (client) => {
-          try {
-            let response = {
-              action: 'userJoined',
-              players: players,
-              roomName: userRoom,
-            };
-
-            client.send(JSON.stringify(response));
-          } catch (e) {
-            logger.error(e.stack);
-            let response = {
-              action: 'error',
-            };
-
-            client.send(JSON.stringify(response));
-          }
-        });
       }
     });
 
@@ -143,7 +146,7 @@ module.exports = (server) => {
       res.send({ error: '', roomName: roomName });
     } catch (e) {
       logger.error(e.stack);
-      return res.send({ error: 'Unsuccessful session creation' });
+      return res.send({ error: 'Unsuccessful in creating room' });
     }
   });
 
@@ -155,6 +158,17 @@ module.exports = (server) => {
     } catch (e) {
       logger.error(e.stack);
       return res.send({ error: 'Unsuccessful in joining room' });
+    }
+  });
+
+  // load a session (fill up with yelp data)
+  router.post('/load', async (req, res) => {
+    try {
+      await roomService.loadSession(req.body.roomName);
+      res.send({ error: '' });
+    } catch (e) {
+      logger.error(e.stack);
+      return res.send({ error: 'Unsuccessful in  loading room' });
     }
   });
 

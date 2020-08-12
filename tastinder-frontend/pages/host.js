@@ -170,15 +170,29 @@ const Host = () => {
         >
           <div className={styles.cardBody}>
             <h1>Create Room</h1>
-            <div className={styles.cardField}>
-              <p>Ready to find your true love?</p>
-              <p>Location: {location}</p>
-              <p>Keyword: {keyword}</p>
+            <p>Ready to find your true love?</p>
+            <div className={styles.userRoomSettingsBorder}>
+              <p className={styles.locationText}>
+                <img
+                  className={styles.createRoomLocationImg}
+                  src="/location.png"
+                />
+                &ensp; {location}
+              </p>
+              <p className={styles.keywordText}>
+                <img className={styles.createRoomFoodImg} src="/food.png" />
+                &ensp; {keyword}
+              </p>
             </div>
 
-            <button onClick={backButtonClick}>←Back</button>
             <button
-              className={`${styles.right} ${styles.createButton}`}
+              className={styles.backAndCreateButtons}
+              onClick={backButtonClick}
+            >
+              ←Back
+            </button>
+            <button
+              className={`${styles.right} ${styles.backAndCreateButtons}`}
               onClick={nextButtonClick}
             >
               Create→

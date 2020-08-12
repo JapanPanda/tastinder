@@ -9,14 +9,19 @@ const Join = () => {
   const [card, setCard] = useState(0);
   const [inCard, setInCard] = useState(-1);
   const [outCard, setOutCard] = useState([false, false, false]);
-  const [roomId, setRoomId] = useState('');
+
+  const [roomName, setRoomName] = useState('');
+  const [numPlayers, setNumPlayers] = useState(0);
+
+  // websocket to listen to players
+  let ws = null;
 
   useEffect(() => {
     setRandColor(colors[Math.floor(Math.random() * colors.length)]);
   }, []);
 
   const handleInput = (event) => {
-    setRoomId(event.target.value);
+    setRoomName(event.target.value);
   };
 
   // Move to next card
@@ -47,14 +52,25 @@ const Join = () => {
   };
 
   const leaveSession = (event) => {
-    console.log(`Leaving ${roomId}`);
+    console.log(`Leaving ${roomName}`);
     // TODO: Call api and wait for confirmation then go back
     backButtonClick();
   };
 
   const joinSession = (event) => {
-    console.log(`Joining ${roomId}`);
-    // TODO: Call api and wait for confirmation then go forward
+    console.log(`Joining ${roomName}`);
+    // create a websocket to listen to player joins
+    ws = new WebSocket('ws://localhost:1337/room?roomName=' + roomName);
+    ws.onmessage = (message) => {
+      console.log(message);
+      try {
+        let players = JSON.parse(message.data).players;
+        setNumPlayers(players);
+      } catch (e) {}
+    };
+    ws.onclose = () => {
+      console.log('disconnected');
+    };
     nextButtonClick();
   };
 
@@ -81,8 +97,8 @@ const Join = () => {
             <div className={styles.cardField}>
               <input
                 type="text"
-                placeholder="blue-narwhal (etc)"
-                onInput={(event) => handleInput(event, setLocation)}
+                placeholder="BlueNarwhal (etc)"
+                onInput={(event) => handleInput(event)}
               />
             </div>
             <button className={styles.right} onClick={joinSession}>
@@ -100,7 +116,7 @@ const Join = () => {
           }
         >
           {/* Loading */}
-          {false && (
+          {loading && !disconnected && (
             <div className="loading">
               <div className="ldsHeart">
                 <div></div>
@@ -108,20 +124,32 @@ const Join = () => {
             </div>
           )}
 
-          <div className={styles.roomInfo}>
-            <span className={styles.title}>
-              <h1>Room Code</h1>
-            </span>
-            <div className={styles.code}>
-              <h3>33214</h3>
+          {/* Disconnected */}
+          {!loading && disconnected && (
+            <div className="loading">
+              <p>Reconnecting</p>
+              <div className="ldsHeart">
+                <div></div>
+              </div>
             </div>
-            <span className={styles.players}>
-              <p>Food Critics: 1/4</p>
-            </span>
-            <div>
-              <button onClick={leaveSession}>Leave</button>
+          )}
+
+          {!loading && !disconnected && (
+            <div className={styles.roomInfo}>
+              <span className={styles.title}>
+                <h1>Room Code</h1>
+              </span>
+              <div className={styles.code}>
+                <h3>{roomName}</h3>
+              </div>
+              <span className={styles.players}>
+                <p>Food Critics: {numPlayers}</p>
+              </span>
+              <div>
+                <button onClick={leaveSession}>Leave</button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

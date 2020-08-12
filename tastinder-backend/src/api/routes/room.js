@@ -15,7 +15,7 @@ module.exports = (server) => {
   let roomService = Container.get('roomService');
 
   wss.on('connection', async (ws, req) => {
-    let roomName = req.url.slice(11).toLowerCase();
+    let roomName = req.url.slice(15).toLowerCase();
 
     // handle join on database
     try {
@@ -26,43 +26,45 @@ module.exports = (server) => {
         ws.send('Error connecting to the room');
         return;
       }
+      logger.info(`Successfully entered a new player into ${roomName}
+                  New player count: ${players}`);
+
+      // push client to respective room
+      if (rooms.has(roomName)) {
+        let currArray = rooms.get(roomName);
+        currArray.push(ws);
+        rooms.set(roomName, currArray);
+      } else {
+        let newArray = new Array();
+        newArray.push(ws);
+        rooms.set(roomName, newArray);
+      }
+      users.set(ws, roomName);
+
+      let clients = rooms.get(roomName);
+
+      Array.from(clients).forEach(async (client) => {
+        try {
+          let response = {
+            action: 'userJoined',
+            players: players,
+            roomName: roomName,
+          };
+
+          client.send(JSON.stringify(response));
+        } catch (e) {
+          logger.error(e.stack);
+          let response = {
+            action: 'error',
+          };
+
+          client.send(JSON.stringify(response));
+        }
+      });
     } catch (e) {
       logger.error(e.stack);
       ws.send('Error connecting to the room');
     }
-
-    // push client to respective room
-    if (rooms.has(roomName)) {
-      let currArray = rooms.get(roomName);
-      currArray.push(ws);
-      rooms.set(roomName, currArray);
-    } else {
-      let newArray = new Array();
-      newArray.push(ws);
-      rooms.set(roomName, newArray);
-    }
-    users.set(ws, roomName);
-
-    let clients = rooms.get(roomName);
-
-    Array.from(clients).forEach(async (client) => {
-      try {
-        let response = {
-          action: 'userJoined',
-          players: players,
-          roomName: roomName,
-        };
-
-        client.send(JSON.stringify(response));
-      } catch (e) {
-        logger.error(e.stack);
-        let response = {
-          action: 'error',
-        };
-
-        client.send(JSON.stringify(response));
-      }
-    });
 
     ws.on('message', async (message) => {
       let userRoom = users.get(ws);
@@ -120,6 +122,7 @@ module.exports = (server) => {
         (candidate) => candidate !== ws
       );
       users.delete(ws);
+      // if empty room
       if (newClients.length === 0) {
         rooms.delete(userRoom);
       } else {
@@ -127,8 +130,6 @@ module.exports = (server) => {
       }
       ws.send(`Successfully left ${userRoom}`);
     });
-
-    ws.send(`Successfully connected to ${req.url}`);
   });
 
   // health checkpoint

@@ -135,7 +135,7 @@ module.exports = class roomService {
       await room.update({ players: room.players - 1 });
       this.logger.info(`
       =======================================
-      User joining a Room:
+      User leaving a Room:
       Name: ${roomName}
       Players: ${room.players}
       =======================================

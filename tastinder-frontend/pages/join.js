@@ -13,6 +13,8 @@ const Join = () => {
   const [roomName, setRoomName] = useState('');
   const [numPlayers, setNumPlayers] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [disconnected, setDisconnected] = useState(false);
+
   // websocket to listen to players
   let ws = null;
 
@@ -70,8 +72,10 @@ const Join = () => {
         setNumPlayers(players);
       } catch (e) {}
     };
+
     ws.onclose = () => {
       console.log('disconnected');
+      setDisconnected(true);
     };
     nextButtonClick();
   };

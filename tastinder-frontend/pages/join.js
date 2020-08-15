@@ -60,19 +60,19 @@ const Join = () => {
   };
 
   const joinSession = (event) => {
-    setLoading(false);
+    setLoading(true);
     console.log(`Joining ${roomName}`);
     // create a websocket to listen to player joins
     ws = new WebSocket('ws://localhost:1337/room?roomName=' + roomName);
     ws.onmessage = (message) => {
-      setLoading(true);
+      setLoading(false);
       console.log(message);
       try {
         let players = JSON.parse(message.data).players;
         setNumPlayers(players);
       } catch (e) {}
     };
-
+    1;
     ws.onclose = () => {
       console.log('disconnected');
       setDisconnected(true);

@@ -12,7 +12,7 @@ const Join = () => {
 
   const [roomName, setRoomName] = useState('');
   const [numPlayers, setNumPlayers] = useState(0);
-
+  const [loading, setLoading] = useState(false);
   // websocket to listen to players
   let ws = null;
 
@@ -58,10 +58,12 @@ const Join = () => {
   };
 
   const joinSession = (event) => {
+    setLoading(false);
     console.log(`Joining ${roomName}`);
     // create a websocket to listen to player joins
     ws = new WebSocket('ws://localhost:1337/room?roomName=' + roomName);
     ws.onmessage = (message) => {
+      setLoading(true);
       console.log(message);
       try {
         let players = JSON.parse(message.data).players;

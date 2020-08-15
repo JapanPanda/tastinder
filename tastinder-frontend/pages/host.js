@@ -86,7 +86,7 @@ const Host = () => {
     console.log('Card: ' + card);
   };
 
-  const connect = () => {
+  const connect = (newRoomName) => {
     ws = new WebSocket('ws://localhost:1337/room?roomName=' + newRoomName);
     ws.onmessage = (message) => {
       try {
@@ -127,7 +127,7 @@ const Host = () => {
     setLoading(true);
     nextButtonClick();
 
-    let newRoomName = null;
+    let newRoomName = '';
     // create room from api
     await axios
       .post(process.env.NEXT_PUBLIC_TASTINDER_API_URL + 'room/session', {
@@ -152,7 +152,7 @@ const Host = () => {
         setLoading(false);
       });
 
-    connect();
+    connect(newRoomName);
   };
 
   return (

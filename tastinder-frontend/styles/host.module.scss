@@ -96,7 +96,7 @@
     }
 
     .backAndCreateButtons {
-      transform: translateY(50%);
+      margin-top: 10%;
     }
 
     .nextDisabled {
@@ -124,10 +124,6 @@
       animation-fill-mode: both;
     }
 
-    .userRoomSettingsBorder {
-      transform: translateY(15%);
-    }
-
     .locationText {
       font-size: 1.3em;
       text-align: left;
@@ -143,12 +139,12 @@
 
     .createRoomLocationImg {
       max-width: 10%;
-      transform: translateY(20%);
+      margin-top: 5%;
     }
 
     .createRoomFoodImg {
       max-width: 10%;
-      transform: translateY(20%);
+      margin-top: 5%;
     }
   }
 }

@@ -253,7 +253,7 @@ const Host = () => {
             </button>
             <button
               className={`${styles.right} ${styles.backAndCreateButtons}`}
-              onClick={nextButtonClick}
+              onClick={createSession}
             >
               Create→
             </button>

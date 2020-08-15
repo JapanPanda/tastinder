@@ -95,6 +95,10 @@
       text-align: right;
     }
 
+    .backAndCreateButtons {
+      margin-top: 10%;
+    }
+
     .nextDisabled {
       float: right;
       text-align: right;
@@ -118,6 +122,29 @@
       animation-name: fadeIn;
       animation-timing-function: ease-in-out;
       animation-fill-mode: both;
+    }
+
+    .locationText {
+      font-size: 1.3em;
+      text-align: left;
+      overflow-wrap: break-word;
+      line-height: 130%;
+    }
+
+    .keywordText {
+      font-size: 1.3em;
+      text-align: left;
+      overflow-wrap: break-word;
+    }
+
+    .createRoomLocationImg {
+      max-width: 10%;
+      margin-top: 5%;
+    }
+
+    .createRoomFoodImg {
+      max-width: 10%;
+      margin-top: 5%;
     }
   }
 }
@@ -181,6 +208,7 @@
 }
 
 .roomInfo {
+  padding-top: 15%;
   color: #ecf0f1;
   text-align: center;
   width: 100%;
@@ -189,6 +217,12 @@
     background-color: rgba(0, 0, 0, 0.3);
     width: 100%;
     padding: 15px;
+  }
+
+  .players {
+    display: inline-block;
+    padding-top: 30px;
+    padding-bottom: 30px;
   }
 
   h3 {

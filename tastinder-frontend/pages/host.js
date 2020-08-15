@@ -3,6 +3,7 @@ import NavBar from '../components/navbar';
 import styles from '../styles/host.module.scss';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const Host = () => {
   const router = useRouter();
@@ -19,6 +20,13 @@ const Host = () => {
   const [loading, setLoading] = useState(false);
   const [loadedAutocomplete, setLoadedAutocomplete] = useState(false);
   const [nextButtonDisabled, setNextButtonDisabled] = useState(true);
+
+  const [roomName, setRoomName] = useState('');
+  const [numPlayers, setNumPlayers] = useState(0);
+  const [disconnected, setDisconnected] = useState(false);
+
+  // web socket
+  let ws = null;
 
   const handleInput = (event, set) => {
     set(event.target.value);
@@ -78,6 +86,21 @@ const Host = () => {
     console.log('Card: ' + card);
   };
 
+  const connect = () => {
+    ws = new WebSocket('ws://localhost:1337/room?roomName=' + newRoomName);
+    ws.onmessage = (message) => {
+      try {
+        let players = JSON.parse(message.data).players;
+        setNumPlayers(players);
+        setDisconnected(false);
+      } catch (e) {}
+    };
+    ws.onclose = () => {
+      setDisconnected(true);
+      setTimeout(connect, 500);
+    };
+  };
+
   // Call API to delete session
   const cancelSession = (event) => {
     backButtonClick(event);
@@ -91,8 +114,45 @@ const Host = () => {
   };
 
   // Call API to create session
-  const createSession = (event) => {
-    // TODO: call api to create a session
+  const createSession = async (event) => {
+    if (location === undefined || location.length === 0) {
+      console.log('Location was not entered.');
+      return;
+    }
+    let _keyword = keyword;
+    if (_keyword === undefined) {
+      _keyword = '';
+    }
+
+    setLoading(true);
+    nextButtonClick();
+
+    let newRoomName = null;
+    // create room from api
+    await axios
+      .post(process.env.NEXT_PUBLIC_TASTINDER_API_URL + 'room/session', {
+        location: location,
+        keyword: _keyword,
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.error === '') {
+          setRoomName(res.data.roomName);
+          newRoomName = res.data.roomName;
+          setLoading(false);
+        } else {
+          // TODO: add error handling so that the user is informed an error has occurred
+          console.log('Error happened while trying to create session');
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log('Severe axios error on createSession');
+        console.log(err);
+        setLoading(false);
+      });
+
+    connect();
   };
 
   return (
@@ -149,7 +209,7 @@ const Host = () => {
             <div className={styles.cardField}>
               <input
                 type="text"
-                placeholder="(Optional) Sushi, burgers, etc..."
+                placeholder="(Optional) Sushi, Dinner, etc..."
                 onInput={(event) => handleInput(event, setKeyword)}
               />
             </div>
@@ -210,31 +270,42 @@ const Host = () => {
           }
         >
           {/* Loading */}
-          {false && (
+          {loading && !disconnected && (
             <div className="loading">
               <div className="ldsHeart">
                 <div></div>
               </div>
             </div>
           )}
+          {/* Disconnected */}
+          {!loading && disconnected && (
+            <div className="loading">
+              <p>Reconnecting</p>
+              <div className="ldsHeart">
+                <div></div>
+              </div>
+            </div>
+          )}
 
-          <div className={styles.roomInfo}>
-            <span className={styles.title}>
-              <h1>Room Code</h1>
-            </span>
-            <div className={styles.code}>
-              <h3>33214</h3>
+          {!loading && !disconnected && (
+            <div className={styles.roomInfo}>
+              <span className={styles.title}>
+                <h1>Room Code</h1>
+              </span>
+              <div className={styles.code}>
+                <h3>{roomName}</h3>
+              </div>
+              <span className={styles.players}>
+                <p>Food Critics: {numPlayers}</p>
+              </span>
+              <div>
+                <button onClick={startSession}>Start</button>
+              </div>
+              <div>
+                <button onClick={cancelSession}>Cancel</button>{' '}
+              </div>
             </div>
-            <span className={styles.players}>
-              <p>Food Critics: 1/4</p>
-            </span>
-            <div>
-              <button onClick={startSession}>Start</button>
-            </div>
-            <div>
-              <button onClick={cancelSession}>Cancel</button>{' '}
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

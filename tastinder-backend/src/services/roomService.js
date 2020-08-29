@@ -4,6 +4,7 @@ const roomData = require('../models/roomData');
 const fs = require('fs');
 const axios = require('axios');
 const config = require('../config');
+const dedent = require('dedent-js');
 
 module.exports = class roomService {
   constructor(logger, roomModel, roomDataModel) {
@@ -30,13 +31,15 @@ module.exports = class roomService {
       keyword: keyword,
     });
 
-    this.logger.info(`
+    this.logger.info(dedent`
+
     =======================================
     Creating a Room with the Parameters:
     Name: ${roomName}
     Location: ${location}
     Keyword: ${keyword}
     =======================================
+
     `);
 
     return roomName;
@@ -55,12 +58,14 @@ module.exports = class roomService {
       // possible issue is that update takes too long and we get the wrong number of people
       // if multiple people update
       await room.update({ players: room.players + 1 });
-      this.logger.info(`
+      this.logger.info(dedent`
+
       =======================================
       User joining a Room:
       Name: ${roomName}
       Players: ${room.players}
       =======================================
+
       `);
       return room.players;
     } catch (e) {
@@ -107,6 +112,14 @@ module.exports = class roomService {
                 console.log(e);
               });
           });
+          this.logger.info(dedent`
+
+          =======================================
+          Loading Room
+          Name: ${roomName}
+          =======================================
+
+          `);
         })
         .catch((e) => {
           this.logger.error(e.stack);
@@ -114,6 +127,25 @@ module.exports = class roomService {
             this.logger.error(JSON.stringify(e.response.data));
           }
         });
+    } catch (e) {
+      this.logger.error(e.stack);
+      return null;
+    }
+  }
+
+  // get yelp data
+  async fetchData(roomName) {
+    try {
+      let data = await this.roomDataModel.findAll({
+        where: { roomName: { [Op.iLike]: roomName } },
+      });
+
+      if (!data) {
+        this.logger.error(`Room not found ${roomName}`);
+        return null;
+      }
+
+      return data;
     } catch (e) {
       this.logger.error(e.stack);
       return null;
@@ -133,12 +165,14 @@ module.exports = class roomService {
       // possible issue is that update takes too long and we get the wrong number of people
       // if multiple people update
       await room.update({ players: room.players - 1 });
-      this.logger.info(`
+      this.logger.info(dedent`
+
       =======================================
       User leaving a Room:
       Name: ${roomName}
       Players: ${room.players}
       =======================================
+
       `);
       return room.players;
     } catch (e) {

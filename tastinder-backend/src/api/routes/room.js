@@ -169,7 +169,21 @@ module.exports = (server) => {
       res.send({ error: '' });
     } catch (e) {
       logger.error(e.stack);
-      return res.send({ error: 'Unsuccessful in  loading room' });
+      return res.send({ error: 'Unsuccessful in loading room' });
+    }
+  });
+
+  // return a session's yelp data
+  router.get('/fetchData', async (req, res) => {
+    try {
+      if (req.query.roomName === null) {
+        throw new Error('Invalid paramaters');
+      }
+      let data = await roomService.fetchData(req.query.roomName);
+      res.send({ error: '', data: data });
+    } catch (e) {
+      logger.error(e.stack);
+      return res.send({ error: 'Unsuccessful in fetching data' });
     }
   });
 

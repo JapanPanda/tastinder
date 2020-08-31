@@ -1,9 +1,10 @@
 import Head from 'next/head';
 import NavBar from '../components/navbar';
 import styles from '../styles/host.module.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useReducer } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import next from 'next';
 
 const Host = () => {
   const router = useRouter();
@@ -25,14 +26,43 @@ const Host = () => {
   const [numPlayers, setNumPlayers] = useState(0);
   const [disconnected, setDisconnected] = useState(false);
 
+  const firstUpdate = useRef(true);
+
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
+
   // web socket
   let ws = null;
+
+  const enterKeyDown = (e) => {
+    if (nextButtonDisabled || e.repeat) {
+      return;
+    }
+
+    // if we press enter, go to next card.
+    if (e.which === 13 || e.keyCode === 13) {
+      nextButtonClick(e);
+      forceUpdate();
+    }
+  };
+
+  // https://reactjs.org/docs/hooks-effect.html
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    window.addEventListener('keydown', enterKeyDown);
+    return () => {
+      window.removeEventListener('keydown', enterKeyDown);
+    };
+  }, [enterKeyDown]);
 
   const handleInput = (event, set) => {
     set(event.target.value);
     if (!loadedAutocomplete) {
-      var input = document.getElementById('searchItem');
-      var autocomplete = new google.maps.places.Autocomplete(input);
+      let input = document.getElementById('searchItem');
+      let autocomplete = new google.maps.places.Autocomplete(input);
       setLoadedAutocomplete(true);
     }
 
@@ -48,9 +78,13 @@ const Host = () => {
 
   const handleBlur = (event, set) => {
     // wait 50ms because google autocomplete takes time to load in value
-    setTimeout(() => {
-      set(document.getElementById('searchItem').value);
-    }, 50);
+    const searchItem = document.getElementById('searchItem');
+    // check if null
+    if (searchItem) {
+      setTimeout(() => {
+        set(searchItem.value);
+      }, 50);
+    }
   };
 
   const [loaded, error] = useScript(
@@ -67,9 +101,10 @@ const Host = () => {
     // Set outcard to true to transition current card out
     let currOutCard = outCard;
     currOutCard[currCard] = true;
+    console.log(outCard);
     setOutCard(currOutCard);
 
-    console.log('Card: ' + currCard);
+    console.log('Card: ' + (currCard + 1));
   };
 
   // Move to previous card
@@ -83,7 +118,7 @@ const Host = () => {
     // Set out card to the previous card to false
     let currOutCard = outCard;
     currOutCard[currCard - 1] = false;
-    console.log('Card: ' + card);
+    console.log('Card: ' + (currCard - 1));
   };
 
   const connect = (newRoomName) => {
@@ -164,7 +199,7 @@ const Host = () => {
 
       <NavBar pageName="Host" />
 
-      <div className={styles.formContainer}>
+      <div id="Host" className={styles.formContainer}>
         <div
           style={{ zIndex: 4 }}
           className={
@@ -316,6 +351,7 @@ export default Host;
 
 // https://usehooks.com/useScript/
 // Hook
+
 let cachedScripts = [];
 function useScript(src) {
   // Keeping track of script loaded and error state

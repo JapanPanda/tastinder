@@ -28,11 +28,39 @@ const Host = () => {
   // web socket
   let ws = null;
 
+  const enterKeyDown = (e) => {
+    // if there is no input in location, don't go to next card.
+    if (nextButtonDisabled) {
+      return;
+    }
+    // if enter is held down, only go one card at a time
+    if (e.repeat) {
+      return;
+    }
+
+    // if we press enter, go to next card.
+    if (e.code == 'Enter') {
+      console.log('enter was pressed');
+      nextButtonClick(e);
+    }
+  };
+
+  // https://reactjs.org/docs/hooks-effect.html
+  useEffect(() => {
+    // if document is not undefined, use document
+    if (typeof document !== 'undefined') {
+      window.addEventListener('keydown', enterKeyDown);
+      return () => {
+        window.removeEventListener('keydown', enterKeyDown);
+      };
+    }
+  }, [enterKeyDown]);
+
   const handleInput = (event, set) => {
     set(event.target.value);
     if (!loadedAutocomplete) {
-      var input = document.getElementById('searchItem');
-      var autocomplete = new google.maps.places.Autocomplete(input);
+      let input = document.getElementById('searchItem');
+      let autocomplete = new google.maps.places.Autocomplete(input);
       setLoadedAutocomplete(true);
     }
 
@@ -40,6 +68,10 @@ const Host = () => {
     if (event.target.value.length > 0) {
       setNextButtonDisabled(false);
       document.getElementById('nextButton').className = styles.nextEnabled;
+      // trying this part
+      if (event.key == 'Enter') {
+        nextButtonClick;
+      }
     } else {
       setNextButtonDisabled(true);
       document.getElementById('nextButton').className = styles.nextDisabled;
@@ -48,9 +80,13 @@ const Host = () => {
 
   const handleBlur = (event, set) => {
     // wait 50ms because google autocomplete takes time to load in value
-    setTimeout(() => {
-      set(document.getElementById('searchItem').value);
-    }, 50);
+    const searchItem = document.getElementById('searchItem');
+    // check if null
+    if (searchItem) {
+      setTimeout(() => {
+        set(searchItem.value);
+      }, 50);
+    }
   };
 
   const [loaded, error] = useScript(
@@ -61,6 +97,7 @@ const Host = () => {
 
   // Move to next card
   const nextButtonClick = (event) => {
+    console.log('yo');
     let currCard = card;
     setCard(currCard + 1);
 
@@ -69,7 +106,7 @@ const Host = () => {
     currOutCard[currCard] = true;
     setOutCard(currOutCard);
 
-    console.log('Card: ' + currCard);
+    console.log('Card: ' + (currCard + 1));
   };
 
   // Move to previous card
@@ -83,7 +120,7 @@ const Host = () => {
     // Set out card to the previous card to false
     let currOutCard = outCard;
     currOutCard[currCard - 1] = false;
-    console.log('Card: ' + card);
+    console.log('Card: ' + (currCard - 1));
   };
 
   const connect = (newRoomName) => {
@@ -164,7 +201,7 @@ const Host = () => {
 
       <NavBar pageName="Host" />
 
-      <div className={styles.formContainer}>
+      <div id="Host" className={styles.formContainer}>
         <div
           style={{ zIndex: 4 }}
           className={
@@ -316,6 +353,7 @@ export default Host;
 
 // https://usehooks.com/useScript/
 // Hook
+
 let cachedScripts = [];
 function useScript(src) {
   // Keeping track of script loaded and error state

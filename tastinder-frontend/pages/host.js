@@ -34,6 +34,7 @@ const Host = () => {
   let ws = null;
 
   const enterKeyDown = (e) => {
+    // if no input, then do not go next
     if (nextButtonDisabled || e.repeat) {
       return;
     }
@@ -70,6 +71,10 @@ const Host = () => {
     if (event.target.value.length > 0) {
       setNextButtonDisabled(false);
       document.getElementById('nextButton').className = styles.nextEnabled;
+      // trying this part
+      if (event.key == 'Enter') {
+        nextButtonClick;
+      }
     } else {
       setNextButtonDisabled(true);
       document.getElementById('nextButton').className = styles.nextDisabled;
@@ -95,6 +100,7 @@ const Host = () => {
 
   // Move to next card
   const nextButtonClick = (event) => {
+    console.log('yo');
     let currCard = card;
     setCard(currCard + 1);
 

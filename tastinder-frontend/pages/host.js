@@ -100,7 +100,6 @@ const Host = () => {
 
   // Move to next card
   const nextButtonClick = (event) => {
-    console.log('yo');
     let currCard = card;
     setCard(currCard + 1);
 
